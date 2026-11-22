@@ -1,0 +1,12 @@
+[package]
+name = "f_aicv"
+version = "0.1.0"
+edition = "2024"
+authors = ["happyboy <superhappyboy1995@gmail.com>"]
+description = "A Rust-based engine for the novel AI Video Infinite Canvas Vector (*.aicv) interchange protocol. It defines the data abstraction layer for unbounded canvas graphs, shot linkage and bidirectional NLE communication, and provides complete serialization, deserialization and structured manipulation capabilities for AI drama production pipelines."
+keywords = ["file-format", "infinite-canvas", "protocol"]
+license = "Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/0xhappyboy/f_aicv"
+
+[dependencies]

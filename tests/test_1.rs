@@ -2,7 +2,7 @@
 mod tests {
     use f_aicv::FAicv;
     use std::path::PathBuf;
-    const SESSION_DIR: &str = r"C:\Users\admin\AppData\Roaming\HippoX\subsystem\StoryCanvas\StoryCanvasDialogHistory\storycanvas_session_1795461013178";
+    const SESSION_DIR: &str = r"C:\Users\admin\AppData\Roaming\HippoX\subsystem\StoryCanvas\StoryCanvasDialogHistory\storycanvas_session_56b8e75d-fd9c-4cdc-928a-3f80bcf2b504_1795505943265";
     const OUTPUT_DIR: &str = r"C:\Users\admin\Downloads\A-aicv-test";
     const AICV_FILE: &str = r"C:\Users\admin\Downloads\A-aicv-test\session.aicv";
     const EXTRACT_DIR: &str = r"C:\Users\admin\Downloads\A-aicv-test\extracted";

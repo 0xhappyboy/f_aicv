@@ -1,9 +1,11 @@
 //! AI Canvas archive engine.
+mod api;
 mod core;
 mod error;
 mod io;
 mod pkg;
 mod xml;
+pub use api::*;
 pub use core::asset::{AssetCategory, AssetCategoryMap, AssetMap, AssetMetadata};
 pub use core::episode::{Episode, EpisodeMap, EpisodeVersionData, EpisodeVersionMap};
 pub use core::metadata::{CanvasMetadata, ViewportState};

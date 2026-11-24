@@ -90,3 +90,41 @@ session_dir/
 | `workspace/assets/<asset_id>/lighting.png`                                       | 灯光参考图                                   |
 | `workspace/assets/<asset_id>/products.mp3`                                       | 生成的音频文件                               |
 | `[other preserved files]`                                                        | 原始会话中的其他保留文件                     |
+
+## API 模块
+
+`api` 模块提供只读的 `AicvSessionReader`，用于查询已解包的会话目录。
+
+```rust
+use f_aicv::api::AicvSessionReader;
+let reader = AicvSessionReader::open("path/to/extracted_session")?;
+let ids = reader.episode_ids();
+let ep  = reader.episode_current("episode_id");
+let scenes = reader.scenes("episode_id");
+let shots  = reader.scene_shots("episode_id", "scene_id");
+let shot   = reader.shot_current("shot_id");
+let img = reader.shot_image_path("shot_id");
+let vid = reader.shot_video_path("shot_id");
+let pic = reader.asset_image_path("asset_id");
+let mp3 = reader.asset_audio_path("asset_id");
+```
+
+| 函数                                   | 说明                          |
+| -------------------------------------- | ----------------------------- |
+| `open(dir)`                            | 打开已解包的会话目录          |
+| `from_archive(path)`                   | 直接从 `.aicv` 文件读取元数据 |
+| `episode_ids()`                        | 获取所有剧集 ID 列表          |
+| `episode_current(id)`                  | 获取剧集当前版本数据          |
+| `episode_version(id, v)`               | 获取剧集指定版本数据          |
+| `scenes(ep_id)`                        | 获取剧集下所有场次            |
+| `scene_shots(ep_id, sc_id)`            | 获取场次下所有分镜            |
+| `shot_current(shot_id)`                | 获取分镜当前版本数据          |
+| `shot_image_path(shot_id)`             | 获取分镜图片路径              |
+| `shot_video_path(shot_id)`             | 获取分镜视频路径              |
+| `shot_video_first_frame_path(shot_id)` | 获取视频首帧路径              |
+| `shot_video_last_frame_path(shot_id)`  | 获取视频末帧路径              |
+| `assets()`                             | 获取所有资产列表              |
+| `asset_image_path(asset_id)`           | 获取资产图片路径              |
+| `asset_audio_path(asset_id)`           | 获取资产音频路径              |
+| `asset_video_path(asset_id)`           | 获取资产视频路径              |
+| `viewport()`                           | 获取画布视口状态              |

@@ -90,3 +90,41 @@ session_dir/
 | `workspace/assets/<asset_id>/lighting.png`                                       | Lighting reference diagram                                              |
 | `workspace/assets/<asset_id>/products.mp3`                                       | Generated audio file                                                    |
 | `[other preserved files]`                                                        | Any additional files from original session                              |
+
+## API Module
+
+The `api` module provides a read-only `AicvSessionReader` for querying extracted session directories.
+
+```rust
+use f_aicv::api::AicvSessionReader;
+let reader = AicvSessionReader::open("path/to/extracted_session")?;
+let ids = reader.episode_ids();
+let ep  = reader.episode_current("episode_id");
+let scenes = reader.scenes("episode_id");
+let shots  = reader.scene_shots("episode_id", "scene_id");
+let shot   = reader.shot_current("shot_id");
+let img = reader.shot_image_path("shot_id");
+let vid = reader.shot_video_path("shot_id");
+let pic = reader.asset_image_path("asset_id");
+let mp3 = reader.asset_audio_path("asset_id");
+```
+
+| Function                               | Description                              |
+| -------------------------------------- | ---------------------------------------- |
+| `open(dir)`                            | Open an extracted session directory      |
+| `from_archive(path)`                   | Read metadata directly from `.aicv` file |
+| `episode_ids()`                        | List all episode IDs                     |
+| `episode_current(id)`                  | Get current episode data                 |
+| `episode_version(id, v)`               | Get specific episode version             |
+| `scenes(ep_id)`                        | List scenes of an episode                |
+| `scene_shots(ep_id, sc_id)`            | List shots of a scene                    |
+| `shot_current(shot_id)`                | Get current shot data                    |
+| `shot_image_path(shot_id)`             | Get shot image file path                 |
+| `shot_video_path(shot_id)`             | Get shot video file path                 |
+| `shot_video_first_frame_path(shot_id)` | Get first frame path                     |
+| `shot_video_last_frame_path(shot_id)`  | Get last frame path                      |
+| `assets()`                             | List all assets                          |
+| `asset_image_path(asset_id)`           | Get asset image path                     |
+| `asset_audio_path(asset_id)`           | Get asset audio path                     |
+| `asset_video_path(asset_id)`           | Get asset video path                     |
+| `viewport()`                           | Get saved canvas viewport                |

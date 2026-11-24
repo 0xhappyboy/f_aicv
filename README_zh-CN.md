@@ -2,7 +2,7 @@
     f_aicv
 </h1>
 <h4 align="center">
-A Rust-based engine for the novel AI Video Infinite Canvas Vector (*.aicv) interchange protocol. It defines the data abstraction layer for unbounded canvas graphs, shot linkage and bidirectional NLE communication, and provides complete serialization, deserialization and structured manipulation capabilities for AI drama production pipelines.
+一个基于Rust的*.aicv文件解析引擎，用于全新AI视频无限画布矢量(*.aicv)交换协议.它定义了无限画布图、分镜链接以及双向非线性编辑通信的数据抽象层,并为AI短剧生产管线提供完整的序列化、反序列化和结构化操作能力.
 </h4>
 <p align="center">
   <a href="https://github.com/0xhappyboy/f_aicv/LICENSE"><img src="https://img.shields.io/badge/Apache-2.0-d1d1f6.svg?style=flat&labelColor=1C2C2E&color=BEC5C9&logo=googledocs&label=license&logoColor=BEC5C9" alt="License"></a>

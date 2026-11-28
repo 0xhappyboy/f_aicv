@@ -509,6 +509,23 @@ impl AicvSessionReader {
         }
         None
     }
+    /// Get the waveform image path for an audio asset.
+    ///
+    /// Audio assets store the waveform as waveform.png inside the asset directory.
+    /// Returns None if the asset is not an audio asset or the waveform does not exist.
+    pub fn asset_waveform_path(&self, asset_id: &str) -> Option<String> {
+        let asset = self.metadata.assets.get(asset_id)?;
+        // Only audio assets have waveform
+        if asset.category.as_deref() != Some("audio") {
+            return None;
+        }
+        let dir = self.asset_dir(asset_id);
+        let candidate = dir.join("waveform.png");
+        if candidate.exists() {
+            return Some(candidate.to_string_lossy().to_string());
+        }
+        None
+    }
     // ==================== VIEWPORT ====================
     /// Get the saved canvas viewport.
     pub fn viewport(&self) -> crate::core::metadata::ViewportState {

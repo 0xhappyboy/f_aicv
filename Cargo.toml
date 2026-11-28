@@ -1,6 +1,6 @@
 [package]
 name = "f_aicv"
-version = "0.1.6"
+version = "0.1.7"
 edition = "2024"
 authors = ["happyboy <superhappyboy1995@gmail.com>"]
 description = "A Rust-based engine for the novel AI Video Infinite Canvas Vector (*.aicv) interchange protocol. It defines the data abstraction layer for unbounded canvas graphs, shot linkage and bidirectional NLE communication, and provides complete serialization, deserialization and structured manipulation capabilities for AI drama production pipelines."

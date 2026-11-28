@@ -35,6 +35,7 @@ impl FAicv {
     pub fn pack_with_statistics<P: AsRef<Path>>(
         session_dir: P,
         output_path: P,
+        llm_statistics: Option<&str>,
         image_statistics: Option<&str>,
         audio_statistics: Option<&str>,
         video_statistics: Option<&str>,
@@ -42,6 +43,7 @@ impl FAicv {
         create_archive_with_statistics(
             session_dir,
             output_path,
+            llm_statistics,
             image_statistics,
             audio_statistics,
             video_statistics,

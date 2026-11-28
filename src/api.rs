@@ -527,6 +527,10 @@ impl AicvSessionReader {
         None
     }
     // ==================== STATISTICS ====================
+    /// Get the LLM task statistics file path.
+    pub fn llm_task_statistics_path(&self) -> PathBuf {
+        self.session_dir.join("workspace").join("statistics.json")
+    }
     /// Get the image task statistics file path.
     pub fn image_task_statistics_path(&self) -> PathBuf {
         self.session_dir
@@ -544,6 +548,15 @@ impl AicvSessionReader {
         self.session_dir
             .join("workspace")
             .join("video_task_statistics.json")
+    }
+    /// Get the LLM task statistics content as a JSON string.
+    pub fn llm_task_statistics(&self) -> Option<String> {
+        let path = self.llm_task_statistics_path();
+        if path.exists() {
+            std::fs::read_to_string(&path).ok()
+        } else {
+            None
+        }
     }
     /// Get the image task statistics content as a JSON string.
     pub fn image_task_statistics(&self) -> Option<String> {

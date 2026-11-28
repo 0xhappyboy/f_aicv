@@ -32,6 +32,7 @@ pub fn create_archive<P: AsRef<Path>>(session_dir: P, output_path: P) -> FAicvRe
 pub fn create_archive_with_statistics<P: AsRef<Path>>(
     session_dir: P,
     output_path: P,
+    llm_statistics: Option<&str>,
     image_statistics: Option<&str>,
     audio_statistics: Option<&str>,
     video_statistics: Option<&str>,
@@ -53,6 +54,9 @@ pub fn create_archive_with_statistics<P: AsRef<Path>>(
     package.created_at = chrono::Local::now().to_rfc3339();
     collect_files(session_path, session_path, &mut package)?;
     // Add statistics files if provided.
+    if let Some(stats) = llm_statistics {
+        package.set_entry("workspace/statistics.json", stats.as_bytes().to_vec());
+    }
     if let Some(stats) = image_statistics {
         package.set_entry(
             "workspace/image_task_statistics.json",

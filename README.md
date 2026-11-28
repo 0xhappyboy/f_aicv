@@ -32,6 +32,10 @@ let is_valid = FAicv::validate("output.aicv")?;
 session_dir/
 ├── workspace/
 │   ├── metadata.json
+│   ├── statistics.json
+│   ├── image_task_statistics.json
+│   ├── audio_task_statistics.json
+│   ├── video_task_statistics.json
 │   ├── shots/
 │   │   └── <shot_id>/
 │   │       └── e<episode_version>/
@@ -61,35 +65,39 @@ session_dir/
 
 ### Directory Explanation
 
-| Path                                                                             | Description                                                             |
-| -------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| `session_dir/`                                                                   | Root directory of the AI Canvas session                                 |
-| `workspace/`                                                                     | Core workspace containing all session data                              |
-| `workspace/metadata.json`                                                        | Main metadata file containing episodes, scenes, shots, assets structure |
-| `workspace/shots/`                                                               | Directory containing all shot media files                               |
-| `workspace/shots/<shot_id>/`                                                     | Individual shot directory identified by UUID                            |
-| `workspace/shots/<shot_id>/e<episode_version>/`                                  | Episode version directory (e.g., e1, e2, e3)                            |
-| `workspace/shots/<shot_id>/e<episode_version>/s<scene_version>/`                 | Scene version directory (e.g., s1, s2)                                  |
-| `workspace/shots/<shot_id>/e<episode_version>/s<scene_version>/v<shot_version>/` | Shot version directory (e.g., v1, v2)                                   |
-| `workspace/shots/.../image_*.png`                                                | Generated storyboard images for this shot version                       |
-| `workspace/shots/.../tasks/`                                                     | Task-related files directory                                            |
-| `workspace/shots/.../tasks/image/`                                               | Image generation task metadata                                          |
-| `workspace/shots/.../tasks/image/<task_id>.json`                                 | Image task info (status, progress, file paths)                          |
-| `workspace/shots/.../tasks/video/`                                               | Video generation task directory                                         |
-| `workspace/shots/.../tasks/video/<task_id>/`                                     | Individual video task directory                                         |
-| `workspace/shots/.../tasks/video/<task_id>/metadata.json`                        | Video task metadata                                                     |
-| `workspace/shots/.../tasks/video/<task_id>/source.mp4`                           | Generated video file                                                    |
-| `workspace/shots/.../tasks/video/<task_id>/first_frame.png`                      | Extracted first frame                                                   |
-| `workspace/shots/.../tasks/video/<task_id>/last_frame.png`                       | Extracted last frame                                                    |
-| `workspace/assets/`                                                              | Directory containing all asset files                                    |
-| `workspace/assets/<asset_id>/`                                                   | Individual asset directory identified by UUID                           |
-| `workspace/assets/<asset_id>/character.png`                                      | Character reference sheet (three-view)                                  |
-| `workspace/assets/<asset_id>/prop.png`                                           | Prop product image                                                      |
-| `workspace/assets/<asset_id>/environment.png`                                    | Environment establishing shot                                           |
-| `workspace/assets/<asset_id>/atmosphere.png`                                     | Atmosphere mood board                                                   |
-| `workspace/assets/<asset_id>/lighting.png`                                       | Lighting reference diagram                                              |
-| `workspace/assets/<asset_id>/products.mp3`                                       | Generated audio file                                                    |
-| `[other preserved files]`                                                        | Any additional files from original session                              |
+| Path                                                                           | Description                                                             |
+| ------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
+| session_dir/                                                                   | Root directory of the AI Canvas session                                 |
+| workspace/                                                                     | Core workspace containing all session data                              |
+| workspace/metadata.json                                                        | Main metadata file containing episodes, scenes, shots, assets structure |
+| workspace/statistics.json                                                      | LLM chat usage statistics                                               |
+| workspace/image_task_statistics.json                                           | Image generation task usage statistics                                  |
+| workspace/audio_task_statistics.json                                           | Audio generation task usage statistics                                  |
+| workspace/video_task_statistics.json                                           | Video generation task usage statistics                                  |
+| workspace/shots/                                                               | Directory containing all shot media files                               |
+| workspace/shots/<shot_id>/                                                     | Individual shot directory identified by UUID                            |
+| workspace/shots/<shot_id>/e<episode_version>/                                  | Episode version directory (e.g., e1, e2, e3)                            |
+| workspace/shots/<shot_id>/e<episode_version>/s<scene_version>/                 | Scene version directory (e.g., s1, s2)                                  |
+| workspace/shots/<shot_id>/e<episode_version>/s<scene_version>/v<shot_version>/ | Shot version directory (e.g., v1, v2)                                   |
+| workspace/shots/.../image\_\*.png                                              | Generated storyboard images for this shot version                       |
+| workspace/shots/.../tasks/                                                     | Task-related files directory                                            |
+| workspace/shots/.../tasks/image/                                               | Image generation task metadata                                          |
+| workspace/shots/.../tasks/image/<task_id>.json                                 | Image task info (status, progress, file paths)                          |
+| workspace/shots/.../tasks/video/                                               | Video generation task directory                                         |
+| workspace/shots/.../tasks/video/<task_id>/                                     | Individual video task directory                                         |
+| workspace/shots/.../tasks/video/<task_id>/metadata.json                        | Video task metadata                                                     |
+| workspace/shots/.../tasks/video/<task_id>/source.mp4                           | Generated video file                                                    |
+| workspace/shots/.../tasks/video/<task_id>/first_frame.png                      | Extracted first frame                                                   |
+| workspace/shots/.../tasks/video/<task_id>/last_frame.png                       | Extracted last frame                                                    |
+| workspace/assets/                                                              | Directory containing all asset files                                    |
+| workspace/assets/<asset_id>/                                                   | Individual asset directory identified by UUID                           |
+| workspace/assets/<asset_id>/character.png                                      | Character reference sheet (three-view)                                  |
+| workspace/assets/<asset_id>/prop.png                                           | Prop product image                                                      |
+| workspace/assets/<asset_id>/environment.png                                    | Environment establishing shot                                           |
+| workspace/assets/<asset_id>/atmosphere.png                                     | Atmosphere mood board                                                   |
+| workspace/assets/<asset_id>/lighting.png                                       | Lighting reference diagram                                              |
+| workspace/assets/<asset_id>/products.mp3                                       | Generated audio file                                                    |
+| [other preserved files]                                                        | Any additional files from original session                              |
 
 ## API Module
 
@@ -107,24 +115,32 @@ let img = reader.shot_image_path("shot_id");
 let vid = reader.shot_video_path("shot_id");
 let pic = reader.asset_image_path("asset_id");
 let mp3 = reader.asset_audio_path("asset_id");
+let llm_stats = reader.llm_task_statistics();
+let img_stats = reader.image_task_statistics();
+let aud_stats = reader.audio_task_statistics();
+let vid_stats = reader.video_task_statistics();
 ```
 
-| Function                               | Description                              |
-| -------------------------------------- | ---------------------------------------- |
-| `open(dir)`                            | Open an extracted session directory      |
-| `from_archive(path)`                   | Read metadata directly from `.aicv` file |
-| `episode_ids()`                        | List all episode IDs                     |
-| `episode_current(id)`                  | Get current episode data                 |
-| `episode_version(id, v)`               | Get specific episode version             |
-| `scenes(ep_id)`                        | List scenes of an episode                |
-| `scene_shots(ep_id, sc_id)`            | List shots of a scene                    |
-| `shot_current(shot_id)`                | Get current shot data                    |
-| `shot_image_path(shot_id)`             | Get shot image file path                 |
-| `shot_video_path(shot_id)`             | Get shot video file path                 |
-| `shot_video_first_frame_path(shot_id)` | Get first frame path                     |
-| `shot_video_last_frame_path(shot_id)`  | Get last frame path                      |
-| `assets()`                             | List all assets                          |
-| `asset_image_path(asset_id)`           | Get asset image path                     |
-| `asset_audio_path(asset_id)`           | Get asset audio path                     |
-| `asset_video_path(asset_id)`           | Get asset video path                     |
-| `viewport()`                           | Get saved canvas viewport                |
+| Function                             | Description                            |
+| ------------------------------------ | -------------------------------------- |
+| open(dir)                            | Open an extracted session directory    |
+| from_archive(path)                   | Read metadata directly from .aicv file |
+| episode_ids()                        | List all episode IDs                   |
+| episode_current(id)                  | Get current episode data               |
+| episode_version(id, v)               | Get specific episode version           |
+| scenes(ep_id)                        | List scenes of an episode              |
+| scene_shots(ep_id, sc_id)            | List shots of a scene                  |
+| shot_current(shot_id)                | Get current shot data                  |
+| shot_image_path(shot_id)             | Get shot image file path               |
+| shot_video_path(shot_id)             | Get shot video file path               |
+| shot_video_first_frame_path(shot_id) | Get first frame path                   |
+| shot_video_last_frame_path(shot_id)  | Get last frame path                    |
+| assets()                             | List all assets                        |
+| asset_image_path(asset_id)           | Get asset image path                   |
+| asset_audio_path(asset_id)           | Get asset audio path                   |
+| asset_video_path(asset_id)           | Get asset video path                   |
+| viewport()                           | Get saved canvas viewport              |
+| llm_task_statistics()                | Get LLM usage statistics               |
+| image_task_statistics()              | Get image task statistics              |
+| audio_task_statistics()              | Get audio task statistics              |
+| video_task_statistics()              | Get video task statistics              |

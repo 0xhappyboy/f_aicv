@@ -28,6 +28,52 @@ pub fn create_archive<P: AsRef<Path>>(session_dir: P, output_path: P) -> FAicvRe
     // Write archive.
     write_archive(&package, output_path)
 }
+/// Creates an AICV archive from a session directory with optional statistics files.
+pub fn create_archive_with_statistics<P: AsRef<Path>>(
+    session_dir: P,
+    output_path: P,
+    image_statistics: Option<&str>,
+    audio_statistics: Option<&str>,
+    video_statistics: Option<&str>,
+) -> FAicvResult<()> {
+    let session_path = session_dir.as_ref();
+    if !session_path.exists() {
+        return Err(FAicvError::Invalid(format!(
+            "session directory not found: {}",
+            session_path.display()
+        )));
+    }
+    // Collect all files from session directory.
+    let mut package = FAicvPackage::new();
+    package.session_id = session_path
+        .file_name()
+        .and_then(|n| n.to_str())
+        .unwrap_or_default()
+        .to_string();
+    package.created_at = chrono::Local::now().to_rfc3339();
+    collect_files(session_path, session_path, &mut package)?;
+    // Add statistics files if provided.
+    if let Some(stats) = image_statistics {
+        package.set_entry(
+            "workspace/image_task_statistics.json",
+            stats.as_bytes().to_vec(),
+        );
+    }
+    if let Some(stats) = audio_statistics {
+        package.set_entry(
+            "workspace/audio_task_statistics.json",
+            stats.as_bytes().to_vec(),
+        );
+    }
+    if let Some(stats) = video_statistics {
+        package.set_entry(
+            "workspace/video_task_statistics.json",
+            stats.as_bytes().to_vec(),
+        );
+    }
+    // Write archive.
+    write_archive(&package, output_path)
+}
 /// Creates an AICV archive from a package structure.
 pub fn write_archive<P: AsRef<Path>>(package: &FAicvPackage, output_path: P) -> FAicvResult<()> {
     let cursor = std::io::Cursor::new(Vec::new());

@@ -17,7 +17,9 @@ pub use io::reader::{
     ArchiveSummary, archive_summary, extract_metadata, extract_to_directory, list_entries,
     read_archive, read_archive_from_bytes,
 };
-pub use io::writer::{create_archive, create_archive_from_metadata, write_archive};
+pub use io::writer::{
+    create_archive, create_archive_from_metadata, create_archive_with_statistics, write_archive,
+};
 pub use pkg::{
     AICV_FORMAT_VERSION, FAicvEntry, FAicvEntryType, FAicvPackage, MANIFEST_FILE, METADATA_FILE,
 };
@@ -28,6 +30,22 @@ impl FAicv {
     /// Packs a session directory into an .aicv archive file.
     pub fn pack<P: AsRef<Path>>(session_dir: P, output_path: P) -> FAicvResult<()> {
         create_archive(session_dir, output_path)
+    }
+    /// Packs a session directory into an .aicv archive file with optional statistics.
+    pub fn pack_with_statistics<P: AsRef<Path>>(
+        session_dir: P,
+        output_path: P,
+        image_statistics: Option<&str>,
+        audio_statistics: Option<&str>,
+        video_statistics: Option<&str>,
+    ) -> FAicvResult<()> {
+        create_archive_with_statistics(
+            session_dir,
+            output_path,
+            image_statistics,
+            audio_statistics,
+            video_statistics,
+        )
     }
     /// Unpacks an .aicv archive file into a session directory.
     pub fn unpack<P: AsRef<Path>>(archive_path: P, output_dir: P) -> FAicvResult<CanvasMetadata> {

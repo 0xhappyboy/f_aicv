@@ -526,6 +526,52 @@ impl AicvSessionReader {
         }
         None
     }
+    // ==================== STATISTICS ====================
+    /// Get the image task statistics file path.
+    pub fn image_task_statistics_path(&self) -> PathBuf {
+        self.session_dir
+            .join("workspace")
+            .join("image_task_statistics.json")
+    }
+    /// Get the audio task statistics file path.
+    pub fn audio_task_statistics_path(&self) -> PathBuf {
+        self.session_dir
+            .join("workspace")
+            .join("audio_task_statistics.json")
+    }
+    /// Get the video task statistics file path.
+    pub fn video_task_statistics_path(&self) -> PathBuf {
+        self.session_dir
+            .join("workspace")
+            .join("video_task_statistics.json")
+    }
+    /// Get the image task statistics content as a JSON string.
+    pub fn image_task_statistics(&self) -> Option<String> {
+        let path = self.image_task_statistics_path();
+        if path.exists() {
+            std::fs::read_to_string(&path).ok()
+        } else {
+            None
+        }
+    }
+    /// Get the audio task statistics content as a JSON string.
+    pub fn audio_task_statistics(&self) -> Option<String> {
+        let path = self.audio_task_statistics_path();
+        if path.exists() {
+            std::fs::read_to_string(&path).ok()
+        } else {
+            None
+        }
+    }
+    /// Get the video task statistics content as a JSON string.
+    pub fn video_task_statistics(&self) -> Option<String> {
+        let path = self.video_task_statistics_path();
+        if path.exists() {
+            std::fs::read_to_string(&path).ok()
+        } else {
+            None
+        }
+    }
     // ==================== VIEWPORT ====================
     /// Get the saved canvas viewport.
     pub fn viewport(&self) -> crate::core::metadata::ViewportState {
